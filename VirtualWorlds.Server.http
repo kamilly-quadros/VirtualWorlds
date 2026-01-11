@@ -1,0 +1,6 @@
+@VirtualWorlds.Server_HostAddress = http://localhost:5172
+
+GET {{VirtualWorlds.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
