@@ -4,7 +4,10 @@ namespace VirtualWorlds.Server.DTOs
 {
     public class SpecificationJsonDto
     {
+        [JsonPropertyName("Author")]
         public string Author { get; set; } = null!;
+
+        [JsonPropertyName("Page count")]
         public int PageCount { get; set; }
 
         [JsonPropertyName("Originally published")]

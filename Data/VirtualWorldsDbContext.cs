@@ -3,7 +3,7 @@ using VirtualWorlds.Server.Models;
 
 namespace VirtualWorlds.Server.Data
 {
-    public class VirtualWorldsDbContext:DbContext
+    public class VirtualWorldsDbContext : DbContext
     {
         public DbSet<Author> Authors => Set<Author>();
         public DbSet<Book> Books => Set<Book>();
@@ -16,6 +16,10 @@ namespace VirtualWorlds.Server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Book>()
+                .HasOne(b => b.Specification)
+                .WithOne(s => s.Book)
+                .HasForeignKey<Specification>(s => s.CdBook);
         }
     }
 }

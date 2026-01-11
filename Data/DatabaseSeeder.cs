@@ -21,6 +21,13 @@ namespace VirtualWorlds.Server.Data
 
             foreach (var dto in booksDto)
             {
+                if (dto.Specifications == null)
+                    throw new Exception($"Livro '{dto.Name}' está sem especificações no JSON.");
+                if (string.IsNullOrWhiteSpace(dto.Specifications.Author))
+                    throw new Exception($"Livro '{dto.Name}' está sem autor.");
+                if (string.IsNullOrWhiteSpace(dto.Name))
+                    throw new Exception("Campo 'name' está vazio ou nulo no JSON.");
+
                 var author = context.Authors
                     .FirstOrDefault(a => a.NmAuthor == dto.Specifications.Author);
 

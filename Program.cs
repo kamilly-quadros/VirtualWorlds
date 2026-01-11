@@ -1,8 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using VirtualWorlds.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddDbContext<VirtualWorldsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -12,6 +15,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<VirtualWorldsDbContext>();
+    db.Database.EnsureCreated();
+}
 
 using (var scope = app.Services.CreateScope())
 {
