@@ -7,8 +7,8 @@ namespace VirtualWorlds.Server.Data
     public class DatabaseSeeder
     {
         public static async Task SeedAsync(
-        VirtualWorldsDbContext context,
-        IWebHostEnvironment env)
+            VirtualWorldsDbContext context,
+            IWebHostEnvironment env)
         {
             if (context.Books.Any())
                 return;
@@ -16,97 +16,72 @@ namespace VirtualWorlds.Server.Data
             var filePath = Path.Combine(env.ContentRootPath, "books.json");
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"Arquivo books.json não encontrado em {filePath}");
+
             var json = await File.ReadAllTextAsync(filePath);
-            var booksDto = JsonSerializer.Deserialize<List<BookJsonDto>>(json)!;
+
+            var booksDto = JsonSerializer.Deserialize<List<BookJsonDto>>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }
+            )!;
 
             foreach (var dto in booksDto)
             {
                 if (dto.Specifications == null)
-                    throw new Exception($"Livro '{dto.Name}' está sem especificações no JSON.");
-                if (string.IsNullOrWhiteSpace(dto.Specifications.Author))
-                    throw new Exception($"Livro '{dto.Name}' está sem autor.");
-                if (string.IsNullOrWhiteSpace(dto.Name))
-                    throw new Exception("Campo 'name' está vazio ou nulo no JSON.");
-
-                var author = context.Authors
-                    .FirstOrDefault(a => a.NmAuthor == dto.Specifications.Author);
-
-                if (author == null)
-                {
-                    author = new Author { NmAuthor = dto.Specifications.Author };
-                    context.Authors.Add(author);
-                }
+                    throw new Exception($"Livro '{dto.Name}' está sem especificações.");
 
                 var book = new Book
                 {
-                    NmBook = dto.Name,
-                    NrPriceBook = dto.Price
+                    Id = dto.Id,
+                    Name = dto.Name,
+                    Price = dto.Price
                 };
+
                 context.Books.Add(book);
+                await context.SaveChangesAsync();
 
                 var specification = new Specification
                 {
-                    Author = author,
-                    Book = book,
-                    NrPageCount = dto.Specifications.PageCount,
-                    DtOriginallyPublished = dto.Specifications.OriginallyPublished
+                    BookId = book.Id,
+                    Author = dto.Specifications.Author,
+                    PageCount = dto.Specifications.PageCount,
+                    OriginallyPublished = dto.Specifications.OriginallyPublished,
+                    IllustratorJson = SerializeToJsonArray(dto.Specifications.Illustrator),
+                    GenresJson = SerializeToJsonArray(dto.Specifications.Genres)
                 };
+
                 context.Specifications.Add(specification);
-
-                foreach (var illustratorName in NormalizeToList(dto.Specifications.Illustrator))
-                {
-                    var illustrator = context.Illustrators
-                        .FirstOrDefault(i => i.NmIllustrator == illustratorName);
-
-                    if (illustrator == null)
-                    {
-                        illustrator = new Illustrator { NmIllustrator = illustratorName };
-                        context.Illustrators.Add(illustrator);
-                    }
-
-                    context.SpecificationIllustrators.Add(
-                        new SpecificationIllustrator
-                        {
-                            Specification = specification,
-                            Illustrator = illustrator
-                        });
-                }
-
-                foreach (var genreName in NormalizeToList(dto.Specifications.Genres))
-                {
-                    var genre = context.Genres
-                        .FirstOrDefault(g => g.NmGenre == genreName);
-
-                    if (genre == null)
-                    {
-                        genre = new Genre { NmGenre = genreName };
-                        context.Genres.Add(genre);
-                    }
-
-                    context.SpecificationGenres.Add(
-                        new SpecificationGenre
-                        {
-                            Specification = specification,
-                            Genre = genre
-                        });
-                }
             }
 
             await context.SaveChangesAsync();
         }
 
-        private static IEnumerable<string> NormalizeToList(object value)
+        private static string SerializeToJsonArray(object? value)
         {
+            if (value == null)
+                return "[]";
+
             if (value is JsonElement element)
             {
                 if (element.ValueKind == JsonValueKind.Array)
-                    return element.EnumerateArray().Select(x => x.GetString()!);
+                {
+                    var list = element.EnumerateArray()
+                        .Select(e => e.GetString())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .ToList();
+
+                    return JsonSerializer.Serialize(list);
+                }
 
                 if (element.ValueKind == JsonValueKind.String)
-                    return new[] { element.GetString()! };
+                {
+                    return JsonSerializer.Serialize(new[] { element.GetString() });
+                }
             }
 
-            return Enumerable.Empty<string>();
+            return "[]";
         }
     }
 }

@@ -7,16 +7,16 @@ namespace VirtualWorlds.Server.Models
     public class Book
     {
         [Key]
-        [Column("cd_book")]
-        public int CdBook { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
 
-        [Column("nm_book")]
+        [Column("name")]
         [Required]
-        public string NmBook { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
-        [Column("nr_price_book")]
-        public decimal NrPriceBook { get; set; }
+        [Column("price")]
+        public decimal Price { get; set; }
 
-        public Specification Specification { get; set; } = null!;
+        public Specification Specifications { get; set; } = null!;
     }
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using VirtualWorlds.Server.Data;
 
 namespace VirtualWorlds.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class BooksController : ControllerBase
     {
         private readonly VirtualWorldsDbContext _context;
@@ -18,74 +18,164 @@ namespace VirtualWorlds.Server.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetBooks(
-            [FromQuery] string? name,
-            [FromQuery] string? author,
-            [FromQuery] string? illustrator,
-            [FromQuery] string? genre,
-            [FromQuery] DateTime? publishedFrom,
-            [FromQuery] DateTime? publishedTo)
+        [FromQuery] string? name,
+        [FromQuery] string? author,
+        [FromQuery] string? illustrator,
+        [FromQuery] string? genre,
+        [FromQuery] int? yearFrom,
+        [FromQuery] int? yearTo)
         {
             var query = _context.Books
                 .AsNoTracking()
-                .Include(b => b.Specification)
-                    .ThenInclude(s => s.Author)
-                .Include(b => b.Specification)
-                    .ThenInclude(s => s.SpecificationIllustrators)
-                        .ThenInclude(si => si.Illustrator)
-                .Include(b => b.Specification)
-                    .ThenInclude(s => s.SpecificationGenres)
-                        .ThenInclude(sg => sg.Genre)
+                .Include(b => b.Specifications)
                 .AsQueryable();
 
-            
             if (!string.IsNullOrWhiteSpace(name))
             {
+                var nameLower = name.ToLower();
                 query = query.Where(b =>
-                    EF.Functions.Like(b.NmBook, $"%{name}%"));
+                    EF.Functions.Like(
+                        b.Name.ToLower(),
+                        $"%{nameLower}%"));
             }
+
             if (!string.IsNullOrWhiteSpace(author))
             {
+                var authorLower = author.ToLower();
                 query = query.Where(b =>
-                    b.Specification.Author.NmAuthor.Contains(author));
+                    b.Specifications.Author.ToLower()
+                        .Contains(authorLower));
             }
+
+            var books = await query.ToListAsync();
+
+            if (yearFrom.HasValue || yearTo.HasValue)
+            {
+                books = books
+                    .Where(b =>
+                    {
+                        var year = TryGetYear(b.Specifications.OriginallyPublished);
+                        if (!year.HasValue)
+                            return false;
+
+                        if (yearFrom.HasValue && year < yearFrom.Value)
+                            return false;
+
+                        if (yearTo.HasValue && year > yearTo.Value)
+                            return false;
+
+                        return true;
+                    })
+                    .ToList();
+            }
+
             if (!string.IsNullOrWhiteSpace(illustrator))
             {
-                query = query.Where(b =>
-                    b.Specification.SpecificationIllustrators
-                        .Any(si => si.Illustrator.NmIllustrator.Contains(illustrator)));
+                books = books.Where(b =>
+                    JsonArrayContains(
+                        b.Specifications.IllustratorJson,
+                        illustrator))
+                    .ToList();
             }
+
             if (!string.IsNullOrWhiteSpace(genre))
             {
-                query = query.Where(b =>
-                    b.Specification.SpecificationGenres
-                        .Any(sg => sg.Genre.NmGenre.Contains(genre)));
+                books = books.Where(b =>
+                    JsonArrayContains(
+                        b.Specifications.GenresJson,
+                        genre))
+                    .ToList();
             }
-            if (publishedFrom.HasValue)
+
+            var result = books.Select(b => new
             {
-                query = query.Where(b =>
-                    DateTime.Parse(b.Specification.DtOriginallyPublished) >= publishedFrom.Value);
-            }
-            if (publishedTo.HasValue)
-            {
-                query = query.Where(b =>
-                    DateTime.Parse(b.Specification.DtOriginallyPublished) <= publishedTo.Value);
-            }
-            var result = await query
-                .Select(b => new
+                id = b.Id,
+                name = b.Name,
+                price = b.Price,
+                specifications = new
                 {
-                    b.CdBook,
-                    b.NmBook,
-                    b.NrPriceBook,
-                    PublishedAt = b.Specification.DtOriginallyPublished,
-                    Author = b.Specification.Author.NmAuthor,
-                    Illustrators = b.Specification.SpecificationIllustrators
-                        .Select(i => i.Illustrator.NmIllustrator),
-                    Genres = b.Specification.SpecificationGenres
-                        .Select(g => g.Genre.NmGenre)
-                })
-                .ToListAsync();
+                    Originally_published = b.Specifications.OriginallyPublished,
+                    Author = b.Specifications.Author,
+                    Page_count = b.Specifications.PageCount,
+                    Illustrator = DeserializeSingleOrList(
+                        b.Specifications.IllustratorJson),
+                    Genres = DeserializeToList(
+                        b.Specifications.GenresJson)
+                }
+            });
 
             return Ok(result);
         }
+
+        private static bool JsonArrayContains(string json, string value)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return false;
+
+            var element = JsonSerializer.Deserialize<JsonElement>(json);
+
+            if (element.ValueKind == JsonValueKind.String)
+            {
+                return element.GetString()!
+                    .Contains(value, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (element.ValueKind == JsonValueKind.Array)
+            {
+                return element.EnumerateArray()
+                    .Any(x =>
+                        x.GetString()!
+                            .Contains(value, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return false;
+        }
+
+        private static object DeserializeSingleOrList(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return "";
+
+            var element = JsonSerializer.Deserialize<JsonElement>(json);
+
+            if (element.ValueKind == JsonValueKind.String)
+                return element.GetString()!;
+
+            if (element.ValueKind == JsonValueKind.Array)
+                return element.EnumerateArray()
+                    .Select(x => x.GetString()!)
+                    .ToList();
+
+            return "";
+        }
+
+        private static List<string> DeserializeToList(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return new();
+
+            var element = JsonSerializer.Deserialize<JsonElement>(json);
+
+            if (element.ValueKind == JsonValueKind.String)
+                return new() { element.GetString()! };
+
+            if (element.ValueKind == JsonValueKind.Array)
+                return element.EnumerateArray()
+                    .Select(x => x.GetString()!)
+                    .ToList();
+
+            return new();
+        }
+        private static int? TryGetYear(string date)
+        {
+            if (string.IsNullOrWhiteSpace(date))
+                return null;
+
+            if (DateTime.TryParse(date, out var parsed))
+                return parsed.Year;
+
+            return null;
+        }
+
     }
 }

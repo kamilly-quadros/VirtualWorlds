@@ -5,7 +5,7 @@ namespace VirtualWorlds.Server.DTOs
     public class SpecificationJsonDto
     {
         [JsonPropertyName("Author")]
-        public string Author { get; set; } = null!;
+        public string Author { get; set; } = string.Empty;
 
         [JsonPropertyName("Page count")]
         public int PageCount { get; set; }
@@ -13,7 +13,10 @@ namespace VirtualWorlds.Server.DTOs
         [JsonPropertyName("Originally published")]
         public string OriginallyPublished { get; set; } = null!;
 
-        public object Illustrator { get; set; } = null!;
-        public object Genres { get; set; } = null!;
+        [JsonPropertyName("Illustrator")]
+        public object? Illustrator { get; set; }
+
+        [JsonPropertyName("Genres")]
+        public object? Genres { get; set; }
     }
 }

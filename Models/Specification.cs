@@ -7,24 +7,22 @@ namespace VirtualWorlds.Server.Models
     public class Specification
     {
         [Key]
-        [Column("cd_specification")]
-        public int CdSpecification { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
+        [Column("book_id")]
+        public int BookId { get; set; }
 
-        [Column("cd_book")]
-        public int CdBook { get; set; }
-        public Book Book { get; set; } = null!;
+        public string Author { get; set; } = string.Empty;
 
-        [Column("cd_author")]
-        public int CdAuthor { get; set; }
-        public Author Author { get; set; } = null!;
+        [Column("page_count")]
+        public int PageCount { get; set; }
 
-        [Column("dt_originally_published")]
-        public string DtOriginallyPublished { get; set; } = null!;
+        [Column("originally_published")]
+        public string OriginallyPublished { get; set; } = null!;
+        [Column("illustrator_json")]
+        public string IllustratorJson { get; set; } = "[]";
 
-        [Column("nr_page_count")]
-        public int NrPageCount { get; set; }
-
-        public ICollection<SpecificationIllustrator> SpecificationIllustrators { get; set; } = new List<SpecificationIllustrator>();
-        public ICollection<SpecificationGenre> SpecificationGenres { get; set; } = new List<SpecificationGenre>();
+        [Column("genres_json")]
+        public string GenresJson { get; set; } = "[]";
     }
 }
