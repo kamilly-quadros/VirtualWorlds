@@ -11,7 +11,7 @@ namespace VirtualWorlds.Server.Models
         public int Id { get; set; }
         [Column("book_id")]
         public int BookId { get; set; }
-
+        [Column("author")]
         public string Author { get; set; } = string.Empty;
 
         [Column("page_count")]

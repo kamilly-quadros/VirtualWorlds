@@ -26,39 +26,46 @@ namespace VirtualWorlds.Server.Controllers
             [FromQuery] int? yearTo,
             [FromQuery] string? orderByPrice)
         {
-            var query = _context.Books
-                .AsNoTracking()
-                .Include(b => b.Specifications)
-                .AsQueryable();
-
-            query = Filters.ApplyName(query, name);
-            query = Filters.ApplyAuthor(query, author);
-            query = Filters.ApplyPriceOrder(query, orderByPrice);
-
-            var books = await query.ToListAsync();
-
-            books = Filters.ApplyYearRange(books, yearFrom, yearTo);
-            books = Filters.ApplyJsonFilter(
-                books, illustrator, b => b.Specifications.IllustratorJson);
-            books = Filters.ApplyJsonFilter(
-                books, genre, b => b.Specifications.GenresJson);
-            
-            var result = books.Select(b => new
+            try
             {
-                id = b.Id,
-                name = b.Name,
-                price = b.Price,
-                specifications = new
-                {
-                    Originally_published = b.Specifications.OriginallyPublished,
-                    Author = b.Specifications.Author,
-                    Page_count = b.Specifications.PageCount,
-                    Illustrator = Helpers.DeserializeSingleOrList(b.Specifications.IllustratorJson),
-                    Genres = Helpers.DeserializeToList(b.Specifications.GenresJson)
-                }
-            });
+                var query = _context.Books
+                    .AsNoTracking()
+                    .Include(b => b.Specifications)
+                    .AsQueryable();
 
-            return Ok(result);
+                query = Filters.ApplyName(query, name);
+                query = Filters.ApplyAuthor(query, author);
+                query = Filters.ApplyPriceOrder(query, orderByPrice);
+
+                var books = await query.ToListAsync();
+
+                books = Filters.ApplyYearRange(books, yearFrom, yearTo);
+                books = Filters.ApplyJsonFilter(
+                    books, illustrator, b => b.Specifications.IllustratorJson);
+                books = Filters.ApplyJsonFilter(
+                    books, genre, b => b.Specifications.GenresJson);
+
+                var result = books.Select(b => new
+                {
+                    id = b.Id,
+                    name = b.Name,
+                    price = b.Price,
+                    specifications = new
+                    {
+                        Originally_published = b.Specifications.OriginallyPublished,
+                        Author = b.Specifications.Author,
+                        Page_count = b.Specifications.PageCount,
+                        Illustrator = Helpers.DeserializeSingleOrList(b.Specifications.IllustratorJson),
+                        Genres = Helpers.DeserializeToList(b.Specifications.GenresJson)
+                    }
+                });
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ocorreu um erro ao processar a requisição.", details = ex.Message });
+            }
         }
     }
 }
