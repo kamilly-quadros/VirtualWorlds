@@ -38,15 +38,15 @@ Uma variedade de mundos na palma da sua mão!
 
 **Business**
 
-- Camada que contém validações
+- Camada que contêm validações
 
 **Controllers**
 
-- Camada que contém os endpoints
+- Camada que contêm os _endpoints_
 
 **Data**
 
-- Camada que lida com o banco de dados, carregamento inicial e contexto
+- Camada que lida com o banco de dados, carga inicial e contexto
 
 **DTOs**
 
@@ -62,4 +62,4 @@ Uma variedade de mundos na palma da sua mão!
 
 **AppSettings**
 
-- Os arquivos _appsettings_ contém a porcentagem do frete em decimal. Escolhi colocar no arquivo de configurações para facilitar na manutenção caso precise alterar posteriormente.
+- Os arquivos _appsettings_ contêm algumas configurações do sistema, incluindo a porcentagem do frete. Caso seja necessária alterá-la futuramente, isso facilita a manutenção do sistema.
