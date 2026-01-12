@@ -18,3 +18,12 @@ Para nos enviar o código, crie um fork desse repositório e quando finalizar, m
 O projeto deve ser desenvolvido em C#, utilizando o .NET Core 3.1 ou superior.
 
 Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma explicação do que é necessário para funcionar o projeto e os testes.
+
+----------
+
+# Como executar o projeto
+1. clonar o projeto `git clone https://github.com/kamilly-quadros/VirtualWorlds.git`
+2. acessar o projeto e executar `dotnet run`
+3. link para acessar a API
+    3.1 http://localhost:5172/swagger/index.html
+    3.2 https://localhost:7282/swagger/index.html
