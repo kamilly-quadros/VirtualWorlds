@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VirtualWorlds.Server.Data;
+using VirtualWorlds.Server.Business;
 
 namespace VirtualWorlds.Server.Controllers
 {
@@ -16,7 +17,6 @@ namespace VirtualWorlds.Server.Controllers
             IConfiguration configuration)
         {
             _context = context;
-
             _shippingPercentage =
                 configuration.GetValue<decimal>("Shipping:Percentage");
         }
@@ -25,8 +25,8 @@ namespace VirtualWorlds.Server.Controllers
         public async Task<IActionResult> CalculateShipping(
             [FromQuery] List<int> bookIds)
         {
-            if (bookIds == null || bookIds.Count == 0)
-                return BadRequest("Informe ao menos um código de livro.");
+            if (!ShippingBusiness.ValidateBookIds(bookIds, out var error1))
+                return BadRequest(error1);
 
             var books = await _context.Books
                 .AsNoTracking()
@@ -39,8 +39,8 @@ namespace VirtualWorlds.Server.Controllers
                 })
                 .ToListAsync();
 
-            if (!books.Any())
-                return NotFound("Nenhum livro encontrado com os códigos informados.");
+            if (!ShippingBusiness.ValidateBooksFound(books.Cast<object>().ToList(), out var error2))
+                return NotFound(error2);
 
             var totalBooksValue = books.Sum(b => b.Price);
             var shippingValue = totalBooksValue * _shippingPercentage;

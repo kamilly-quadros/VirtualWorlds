@@ -4,7 +4,7 @@ using VirtualWorlds.Server.Models;
 
 namespace VirtualWorlds.Server.Business
 {
-    public static partial class BookQueryFilters
+    public static partial class BookBusiness
     {
         public static IQueryable<Book> ApplyName(
             IQueryable<Book> query,
@@ -132,39 +132,6 @@ namespace VirtualWorlds.Server.Business
             return DateTime.TryParse(date, out var parsed)
                 ? parsed.Year
                 : null;
-        }
-        public static object DeserializeSingleOrList(string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                return "";
-
-            var element = JsonSerializer.Deserialize<JsonElement>(json);
-
-            return element.ValueKind switch
-            {
-                JsonValueKind.String => element.GetString()!,
-                JsonValueKind.Array => element.EnumerateArray()
-                                           .Select(x => x.GetString()!)
-                                           .ToList(),
-                _ => ""
-            };
-        }
-
-        public static List<string> DeserializeToList(string json)
-        {
-            if (string.IsNullOrWhiteSpace(json))
-                return new();
-
-            var element = JsonSerializer.Deserialize<JsonElement>(json);
-
-            return element.ValueKind switch
-            {
-                JsonValueKind.String => new() { element.GetString()! },
-                JsonValueKind.Array => element.EnumerateArray()
-                                              .Select(x => x.GetString()!)
-                                              .ToList(),
-                _ => new()
-            };
         }
     }
 }

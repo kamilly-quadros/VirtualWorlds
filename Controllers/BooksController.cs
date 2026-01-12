@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VirtualWorlds.Server.Business;
+using VirtualWorlds.Server.Services;
 using VirtualWorlds.Server.Data;
 
 namespace VirtualWorlds.Server.Controllers
@@ -31,16 +32,16 @@ namespace VirtualWorlds.Server.Controllers
                 .Include(b => b.Specifications)
                 .AsQueryable();
 
-            query = BookQueryFilters.ApplyName(query, name);
-            query = BookQueryFilters.ApplyAuthor(query, author);
-            query = BookQueryFilters.ApplyPriceOrder(query, orderByPrice);
+            query = BookBusiness.ApplyName(query, name);
+            query = BookBusiness.ApplyAuthor(query, author);
+            query = BookBusiness.ApplyPriceOrder(query, orderByPrice);
 
             var books = await query.ToListAsync();
 
-            books = BookQueryFilters.ApplyYearRange(books, yearFrom, yearTo);
-            books = BookQueryFilters.ApplyJsonFilter(
+            books = BookBusiness.ApplyYearRange(books, yearFrom, yearTo);
+            books = BookBusiness.ApplyJsonFilter(
                 books, illustrator, b => b.Specifications.IllustratorJson);
-            books = BookQueryFilters.ApplyJsonFilter(
+            books = BookBusiness.ApplyJsonFilter(
                 books, genre, b => b.Specifications.GenresJson);
             
             var result = books.Select(b => new
@@ -53,8 +54,8 @@ namespace VirtualWorlds.Server.Controllers
                     Originally_published = b.Specifications.OriginallyPublished,
                     Author = b.Specifications.Author,
                     Page_count = b.Specifications.PageCount,
-                    Illustrator = BookQueryFilters.DeserializeSingleOrList(b.Specifications.IllustratorJson),
-                    Genres = BookQueryFilters.DeserializeToList(b.Specifications.GenresJson)
+                    Illustrator = Helpers.DeserializeSingleOrList(b.Specifications.IllustratorJson),
+                    Genres = Helpers.DeserializeToList(b.Specifications.GenresJson)
                 }
             });
 
