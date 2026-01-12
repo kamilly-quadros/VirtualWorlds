@@ -34,6 +34,8 @@ Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma e
 
 Uma variedade de mundos na palma da sua mão!
 
+## Estrutura do projeto
+
 **Business**
 
 - Camada que contém validações
