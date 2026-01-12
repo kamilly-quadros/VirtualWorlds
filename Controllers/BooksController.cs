@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VirtualWorlds.Server.Services;
 using VirtualWorlds.Server.Data;
+using VirtualWorlds.Server.DTOs;
 
 namespace VirtualWorlds.Server.Controllers
 {
@@ -45,16 +46,16 @@ namespace VirtualWorlds.Server.Controllers
                 books = Filters.ApplyJsonFilter(
                     books, genre, b => b.Specifications.GenresJson);
 
-                var result = books.Select(b => new
+                var result = books.Select(b => new BookJsonDto
                 {
-                    id = b.Id,
-                    name = b.Name,
-                    price = b.Price,
-                    specifications = new
+                    Id = b.Id,
+                    Name = b.Name,
+                    Price = b.Price,
+                    Specifications = new SpecificationJsonDto
                     {
-                        Originally_published = b.Specifications.OriginallyPublished,
+                        OriginallyPublished = b.Specifications.OriginallyPublished,
                         Author = b.Specifications.Author,
-                        Page_count = b.Specifications.PageCount,
+                        PageCount = b.Specifications.PageCount,
                         Illustrator = Helpers.DeserializeSingleOrList(b.Specifications.IllustratorJson),
                         Genres = Helpers.DeserializeToList(b.Specifications.GenresJson)
                     }

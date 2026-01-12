@@ -50,7 +50,7 @@ Uma variedade de mundos na palma da sua mão!
 
 **DTOs**
 
-- Camada _Data Transfer Object_ para auxiliar na leitura do JSON
+- Camada _Data Transfer Object_ para auxiliar na leitura e conversão do JSON
 
 **Models**
 
@@ -62,4 +62,4 @@ Uma variedade de mundos na palma da sua mão!
 
 **AppSettings**
 
-- Os arquivos _appsettings_ contém a porcentagem do frete. Escolhi colocar no arquivo de configurações para facilitar na manutenção caso precise alterar posteriormente
+- Os arquivos _appsettings_ contém a porcentagem do frete em decimal. Escolhi colocar no arquivo de configurações para facilitar na manutenção caso precise alterar posteriormente.
