@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using VirtualWorlds.Server.Business;
 using VirtualWorlds.Server.Services;
 using VirtualWorlds.Server.Data;
 
@@ -32,16 +31,16 @@ namespace VirtualWorlds.Server.Controllers
                 .Include(b => b.Specifications)
                 .AsQueryable();
 
-            query = BookBusiness.ApplyName(query, name);
-            query = BookBusiness.ApplyAuthor(query, author);
-            query = BookBusiness.ApplyPriceOrder(query, orderByPrice);
+            query = Filters.ApplyName(query, name);
+            query = Filters.ApplyAuthor(query, author);
+            query = Filters.ApplyPriceOrder(query, orderByPrice);
 
             var books = await query.ToListAsync();
 
-            books = BookBusiness.ApplyYearRange(books, yearFrom, yearTo);
-            books = BookBusiness.ApplyJsonFilter(
+            books = Filters.ApplyYearRange(books, yearFrom, yearTo);
+            books = Filters.ApplyJsonFilter(
                 books, illustrator, b => b.Specifications.IllustratorJson);
-            books = BookBusiness.ApplyJsonFilter(
+            books = Filters.ApplyJsonFilter(
                 books, genre, b => b.Specifications.GenresJson);
             
             var result = books.Select(b => new

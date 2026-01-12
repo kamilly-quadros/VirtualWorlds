@@ -2,9 +2,9 @@
 using System.Text.Json;
 using VirtualWorlds.Server.Models;
 
-namespace VirtualWorlds.Server.Business
+namespace VirtualWorlds.Server.Services
 {
-    public static partial class BookBusiness
+    public static partial class Filters
     {
         public static IQueryable<Book> ApplyName(
             IQueryable<Book> query,
