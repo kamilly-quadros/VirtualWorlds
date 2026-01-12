@@ -31,18 +31,33 @@ Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma e
 - https://localhost:7282/swagger/index.html
 ----------
 ## Virtual Worlds
+
 Uma variedade de mundos na palma da sua mão!
+
 **Business**
+
 - Camada que contém validações
+
 **Controllers**
+
 - Camada que contém os endpoints
+
 **Data**
+
 - Camada que lida com o banco de dados, carregamento inicial e contexto
+
 **DTOs**
+
 - Camada _Data Transfer Object_ para auxiliar na leitura do JSON
+
 **Models**
+
 - Camada que espelha as tabelas do banco
+
 **Services**
+
 - Camada de utilidades gerais
+
 **AppSettings**
+
 - Os arquivos _appsettings_ contém a porcentagem do frete. Escolhi colocar no arquivo de configurações para facilitar na manutenção caso precise alterar posteriormente
