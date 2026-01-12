@@ -15,6 +15,9 @@ namespace VirtualWorlds.Server.Data
                 .HasOne(b => b.Specifications)
                 .WithOne()
                 .HasForeignKey<Specification>("BookId");
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Price)
+                .HasConversion<double>();
         }
     }
 }

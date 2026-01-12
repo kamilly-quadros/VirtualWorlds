@@ -23,7 +23,8 @@ namespace VirtualWorlds.Server.Controllers
         [FromQuery] string? illustrator,
         [FromQuery] string? genre,
         [FromQuery] int? yearFrom,
-        [FromQuery] int? yearTo)
+        [FromQuery] int? yearTo,
+        [FromQuery] string? orderByPrice)
         {
             var query = _context.Books
                 .AsNoTracking()
@@ -45,6 +46,16 @@ namespace VirtualWorlds.Server.Controllers
                 query = query.Where(b =>
                     b.Specifications.Author.ToLower()
                         .Contains(authorLower));
+            }
+
+            if (!string.IsNullOrWhiteSpace(orderByPrice))
+            {
+                query = orderByPrice.ToLower() switch
+                {
+                    "asc" => query.OrderBy(b => b.Price),
+                    "desc" => query.OrderByDescending(b => b.Price),
+                    _ => query
+                };
             }
 
             var books = await query.ToListAsync();
