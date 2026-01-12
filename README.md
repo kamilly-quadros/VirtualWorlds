@@ -1,65 +1,71 @@
-Um cliente tem necessidade de buscar livros em um catálogo. Esse cliente quer ler e buscar esse catálogo de um arquivo JSON, e esse arquivo não pode ser modificado. Então com essa informação, é preciso desenvolver:
+# 📚 Virtual Worlds
 
-    Criar uma API para buscar produtos no arquivo JSON disponibilizado.
-    Que seja possível buscar livros por suas especificações(autor, nome do livro ou outro atributo)
-    É preciso que o resultado possa ser ordenado pelo preço.(asc e desc)
-    Disponibilizar um método que calcule o valor do frete em 20% o valor do livro.
+> Uma variedade de mundos na palma da sua mão!
 
-Será avaliado no desafio:
+## 📋 Descrição do Projeto
 
-    Organização de código;
-    Manutenibilidade;
-    Princípios de orientação à objetos;
-    Padrões de projeto;
-    Teste unitário
+Este projeto consiste em uma API RESTful desenvolvida em .NET para gerenciamento de um catálogo de livros. A aplicação permite buscar livros a partir de um arquivo JSON, com funcionalidades de filtragem, ordenação e cálculo de frete.
 
-Para nos enviar o código, crie um fork desse repositório e quando finalizar, mande um pull-request para nós.
+## ✨ Funcionalidades
 
-O projeto deve ser desenvolvido em C#, utilizando o .NET Core 3.1 ou superior.
+- 🔍 Busca de livros por diversos critérios (título, autor, preço, etc.)
+- 🔄 Ordenação dos resultados por preço (crescente e decrescente)
+- 📦 Cálculo automático de frete (20% do valor do livro)
+- 📚 Catálogo baseado em arquivo JSON
+- 📄 Documentação interativa via Swagger
 
-Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma explicação do que é necessário para funcionar o projeto e os testes.
+## 🚀 Requisitos
 
-----------
-### Requisitos do projeto
-1. .Net 9 ou superior
-----------
-### Como executar o projeto
-1. clonar o projeto `git clone https://github.com/kamilly-quadros/VirtualWorlds.git`
-2. acessar o projeto e executar `dotnet run`
-3. link para acessar a API:
-- http://localhost:5172/swagger/index.html
-- https://localhost:7282/swagger/index.html
-----------
-## Virtual Worlds
+- [.NET 9.0](https://dotnet.microsoft.com/download/dotnet/9.0) ou superior
+- Git (para clonar o repositório)
 
-Uma variedade de mundos na palma da sua mão!
+## 🛠️ Como Executar
 
-## Estrutura do projeto
+1. **Clonar o repositório**
+   ```bash
+   git clone https://github.com/kamilly-quadros/VirtualWorlds.git
+   cd VirtualWorlds
+   ```
 
-**Business**
+2. **Executar o projeto**
+   ```bash
+   cd VirtualWorlds.Server
+   dotnet run
+   ```
 
-- Camada que contêm validações
+3. **Acessar a documentação da API**
+   - HTTP: [http://localhost:5172/swagger/index.html](http://localhost:5172/swagger/index.html)
+   - HTTPS: [https://localhost:7282/swagger/index.html](https://localhost:7282/swagger/index.html)
 
-**Controllers**
+## 🏗️ Estrutura do Projeto
 
-- Camada que contêm os _endpoints_
+O projeto segue uma arquitetura em camadas bem definida:
 
-**Data**
+- **Business**
+  - Lógica de negócios e validações
+  - Implementação de regras específicas do domínio
 
-- Camada que lida com o banco de dados, carga inicial e contexto
+- **Controllers**
+  - Endpoints da API REST
+  - Tratamento de requisições HTTP
 
-**DTOs**
+- **Data**
+  - Acesso a dados
+  - Carga inicial do catálogo de livros
+  - Configuração do contexto de dados
 
-- Camada _Data Transfer Object_ para auxiliar na leitura e conversão do JSON
+- **DTOs (Data Transfer Objects)**
+  - Objetos para transferência de dados
+  - Mapeamento entre entidades e modelos de API
 
-**Models**
+- **Models**
+  - Entidades de domínio
+  - Estrutura de dados do sistema
 
-- Camada que espelha as tabelas do banco
+- **Services**
+  - Serviços compartilhados
+  - Lógica de negócios reutilizável
 
-**Services**
-
-- Camada de utilidades gerais
-
-**AppSettings**
-
-- Os arquivos _appsettings_ contêm algumas configurações do sistema, incluindo a porcentagem do frete. Caso seja necessária alterá-la futuramente, isso facilita a manutenção do sistema.
+- **AppSettings**
+  - Configurações da aplicação
+  - Parâmetros como porcentagem do frete
