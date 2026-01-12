@@ -21,9 +21,9 @@ Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma e
 
 ----------
 
-# Como executar o projeto
+## Como executar o projeto
 1. clonar o projeto `git clone https://github.com/kamilly-quadros/VirtualWorlds.git`
 2. acessar o projeto e executar `dotnet run`
-3. link para acessar a API
-    3.1 http://localhost:5172/swagger/index.html
-    3.2 https://localhost:7282/swagger/index.html
+3. link para acessar a API:
+- http://localhost:5172/swagger/index.html
+- https://localhost:7282/swagger/index.html
