@@ -32,17 +32,17 @@ Gostaríamos que fosse evitado a utilização de frameworks, e que tivesse uma e
 ----------
 ## Virtual Worlds
 Uma variedade de mundos na palma da sua mão!
-*Business*
+**Business**
 - Camada que contém validações
-*Controllers*
+**Controllers**
 - Camada que contém os endpoints
-*Data*
+**Data**
 - Camada que lida com o banco de dados, carregamento inicial e contexto
-*DTOs*
+**DTOs**
 - Camada _Data Transfer Object_ para auxiliar na leitura do JSON
-*Models*
+**Models**
 - Camada que espelha as tabelas do banco
-*Services*
+**Services**
 - Camada de utilidades gerais
-*AppSettings*
+**AppSettings**
 - Os arquivos _appsettings_ contém a porcentagem do frete. Escolhi colocar no arquivo de configurações para facilitar na manutenção caso precise alterar posteriormente
