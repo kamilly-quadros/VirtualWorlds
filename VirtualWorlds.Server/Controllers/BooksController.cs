@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using VirtualWorlds.Server.Services;
 using VirtualWorlds.Server.Data;
 using VirtualWorlds.Server.DTOs;
+using System.ComponentModel;
 
 namespace VirtualWorlds.Server.Controllers
 {
@@ -25,7 +26,7 @@ namespace VirtualWorlds.Server.Controllers
             [FromQuery] string? genre,
             [FromQuery] int? yearFrom,
             [FromQuery] int? yearTo,
-            [FromQuery] string? orderByPrice)
+            [FromQuery, DefaultValue("asc")] string? orderByPrice)
         {
             try
             {
