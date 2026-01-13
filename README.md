@@ -30,9 +30,6 @@ Este projeto consiste em uma API RESTful desenvolvida em .NET para gerenciamento
 2. **Executar o projeto**
    ```bash
    cd VirtualWorlds.Server
-   dotnet clean
-   dotnet restore
-   dotnet build
    dotnet run
    ```
 
