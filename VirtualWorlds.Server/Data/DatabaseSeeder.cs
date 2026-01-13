@@ -13,7 +13,7 @@ namespace VirtualWorlds.Server.Data
             if (context.Books.Any())
                 return;
 
-            var filePath = Path.Combine(env.ContentRootPath, "books.json");
+            var filePath = Path.Combine(env.ContentRootPath, "Data", "books.json");
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"Arquivo books.json não encontrado em {filePath}");
 
