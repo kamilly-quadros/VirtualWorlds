@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualWorlds.Server", "VirtualWorlds.Server.csproj", "{22E98541-C12E-39BF-F6C4-351B97776FCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualWorlds.Test", "..\VirtualWorlds.Test\VirtualWorlds.Test.csproj", "{2BD07D71-D3E6-4CD3-8A05-24A76CFCFF89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{22E98541-C12E-39BF-F6C4-351B97776FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22E98541-C12E-39BF-F6C4-351B97776FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22E98541-C12E-39BF-F6C4-351B97776FCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD07D71-D3E6-4CD3-8A05-24A76CFCFF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD07D71-D3E6-4CD3-8A05-24A76CFCFF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD07D71-D3E6-4CD3-8A05-24A76CFCFF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD07D71-D3E6-4CD3-8A05-24A76CFCFF89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
