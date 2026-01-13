@@ -37,6 +37,12 @@ Este projeto consiste em uma API RESTful desenvolvida em .NET para gerenciamento
    - HTTP: [http://localhost:5172/swagger/index.html](http://localhost:5172/swagger/index.html)
    - HTTPS: [https://localhost:7282/swagger/index.html](https://localhost:7282/swagger/index.html)
 
+4. **Executar testes**
+  ```bash
+  Acessar o projeto de teste: cd VirtualWorlds.Test
+  Executar: dotnet test
+  ```
+
 ## 🏗️ Estrutura do Projeto
 
 O projeto segue uma arquitetura em camadas bem definida:
